@@ -14,6 +14,7 @@ import {
   Menu,
   X,
 } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 
 const LandingPage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -26,6 +27,18 @@ const LandingPage = () => {
     co2: 0,
     organizations: 0,
   });
+
+  const navigate = useNavigate()
+
+
+  const handleGetStarted = ()=>{
+    const token = localStorage.getItem("accessToken")
+    if(token){
+      navigate('/marketplace')
+    } else {
+      navigate('/auth')
+    }
+  }
 
   const finalStats = {
     credits: 250000,
@@ -115,18 +128,18 @@ const LandingPage = () => {
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
-              <a
-                href="#"
+              <Link
+                to="/allProjects"
                 className="text-gray-700 hover:text-blue-600 font-medium"
               >
                 Projects
-              </a>
-              <a
-                href="#"
+              </Link>
+              <Link
+                to="/marketplace"
                 className="text-gray-700 hover:text-blue-600 font-medium"
               >
                 Marketplace
-              </a>
+              </Link>
               <a
                 href="#"
                 className="text-gray-700 hover:text-blue-600 font-medium"
@@ -139,7 +152,7 @@ const LandingPage = () => {
               >
                 About
               </a>
-              <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+              <button onClick={handleGetStarted} className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
                 Get Started
               </button>
             </div>

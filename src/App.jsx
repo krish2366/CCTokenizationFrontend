@@ -6,6 +6,7 @@ import CarbonMarketplace from './pages/MarketPlace.jsx'
 import ProjectCreationPage from './pages/ProjectCreation.jsx'
 import AuditorVerificationPage from './pages/AuditorVerificationPage.jsx'
 import AuditorDashboard from './pages/AllProjects.jsx'
+import AllProjects from './pages/AllProjects.jsx'
 
 function App() {
 
@@ -18,6 +19,7 @@ function App() {
         <Route path="/project-creation" element={<ProjectCreationPage />} />
         <Route path="/audit" element={<AuditorVerificationPage />} />
         <Route path="/auditor" element={<AuditorDashboard />} />
+        <Route path="/allProjects" element={<AllProjects/>} />
       </Routes>
     </Router>
   )
