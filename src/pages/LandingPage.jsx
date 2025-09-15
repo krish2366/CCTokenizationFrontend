@@ -129,7 +129,7 @@ const LandingPage = () => {
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
               <Link
-                to="/allProjects"
+                to="/project-creation"
                 className="text-gray-700 hover:text-blue-600 font-medium"
               >
                 Projects
@@ -140,19 +140,10 @@ const LandingPage = () => {
               >
                 Marketplace
               </Link>
-              <a
-                href="#"
-                className="text-gray-700 hover:text-blue-600 font-medium"
+              <button
+                onClick={handleGetStarted}
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
               >
-                Verification
-              </a>
-              <a
-                href="#"
-                className="text-gray-700 hover:text-blue-600 font-medium"
-              >
-                About
-              </a>
-              <button onClick={handleGetStarted} className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
                 Get Started
               </button>
             </div>
@@ -181,12 +172,7 @@ const LandingPage = () => {
               <a href="#" className="block px-3 py-2 text-gray-700">
                 Marketplace
               </a>
-              <a href="#" className="block px-3 py-2 text-gray-700">
-                Verification
-              </a>
-              <a href="#" className="block px-3 py-2 text-gray-700">
-                About
-              </a>
+
               <button className="w-full text-left px-3 py-2 bg-blue-600 text-white rounded-lg mt-2">
                 Get Started
               </button>
@@ -226,11 +212,17 @@ const LandingPage = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-              <button className="bg-gradient-to-r from-blue-600 to-teal-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-teal-700 transition-all duration-200 transform hover:scale-105 shadow-lg">
+              <button
+                onClick={() => navigate("/project-creation")}
+                className="bg-gradient-to-r from-blue-600 to-teal-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-teal-700 transition-all duration-200 transform hover:scale-105 shadow-lg"
+              >
                 Register Your Project
                 <ArrowRight className="inline w-5 h-5 ml-2" />
               </button>
-              <button className="bg-white text-gray-800 px-8 py-4 rounded-xl font-semibold text-lg border-2 border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all duration-200">
+              <button
+                onClick={() => navigate("/marketplace")}
+                className="bg-white text-gray-800 px-8 py-4 rounded-xl font-semibold text-lg border-2 border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all duration-200"
+              >
                 Browse Credits
                 <Globe className="inline w-5 h-5 ml-2" />
               </button>
@@ -404,11 +396,17 @@ const LandingPage = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <button className="bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-100 transition-all duration-200 transform hover:scale-105">
+            <button
+              onClick={() => navigate("/project-creation")}
+              className="bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-100 transition-all duration-200 transform hover:scale-105"
+            >
               Register Project
               <Award className="inline w-5 h-5 ml-2" />
             </button>
-            <button className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white hover:text-blue-600 transition-all duration-200">
+            <button
+              onClick={() => navigate("/marketplace")}
+              className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white hover:text-blue-600 transition-all duration-200"
+            >
               Buy Credits
               <Users className="inline w-5 h-5 ml-2" />
             </button>
