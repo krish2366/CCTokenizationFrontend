@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import {toast} from "react-hot-toast";
+import api from "../api/axios.js";
 import {
   Leaf,
   Upload,
@@ -162,10 +164,31 @@ const ProjectCreationPage = () => {
     setIsTestMode(false);
   };
 
-  const handleSubmit = () => {
+   const handleSubmit = async () => {
+  try {
+    const payload = {
+      ...formData,
+      vintage: formData.vintageYear, // backend expects "vintage"
+    };
+
+    // Get token from localStorage
+    const token = localStorage.getItem("accessToken");
+
+    const response = await api.post("/project", payload, {
+      headers: {
+        Authorization: `Bearer ${token}`, // ✅ pass token in headers
+      },
+    });
+
+    console.log(response);
+    toast.success("Project submitted successfully!");
     setIsSubmitted(true);
-    console.log("Project submitted:", formData);
-  };
+  } catch (error) {
+    console.error("Error submitting project:", error);
+    toast.error("Failed to submit project. Please try again.");
+  }
+};
+
 
   const calculateTotalValue = () => {
     const credits = parseFloat(formData.creditsAvailable) || 0;
