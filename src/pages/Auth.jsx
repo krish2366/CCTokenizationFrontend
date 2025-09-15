@@ -1,68 +1,100 @@
-
-import React, { useState } from 'react';
-import { Eye, EyeOff, Leaf, Shield, Globe, Zap } from 'lucide-react';
+import React, { useState } from "react";
+import { Eye, EyeOff, Leaf, Shield, Globe, Zap } from "lucide-react";
+import api from "../api/axios"; // <-- axios instance
+import { Toaster, toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    confirmPassword: '',
-    organizationType: 'company',
-    organizationName: '',
-    walletAddress: '',
-    agreeToTerms: false
+    email: "",
+    password: "",
+    confirmPassword: "",
+    organizationType: "company",
+    organizationName: "",
+    agreeToTerms: false,
   });
+
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    // Handle authentication logic here
+
+    if (!isLogin && formData.password !== formData.confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      let res;
+      if (isLogin) {
+        res = await api.post("/auth/login", {
+          email: formData.email,
+          password: formData.password,
+        });
+      } else {
+        res = await api.post("/auth/register", {
+          email: formData.email,
+          password: formData.password,
+          organizationType: formData.organizationType,
+          organizationName: formData.organizationName,
+          role: "user",
+        });
+      }
+
+      // store token + role
+      localStorage.setItem("accessToken", res.data.accessToken);
+      localStorage.setItem("role", res.data.user.role);
+
+      toast.success(`${isLogin ? "Login" : "Register"} successful!`);
+
+      navigate("/"); // redirect to landing page
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const features = [
     { icon: Shield, title: "Blockchain Security", desc: "Immutable carbon credit records" },
     { icon: Leaf, title: "Blue Carbon Focus", desc: "Marine ecosystem restoration" },
     { icon: Globe, title: "Global Trading", desc: "Worldwide carbon credit marketplace" },
-    { icon: Zap, title: "AI Verification", desc: "Drone-powered monitoring" }
+    { icon: Zap, title: "AI Verification", desc: "Drone-powered monitoring" },
   ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-teal-50 flex">
+      {/* <Toaster position="top-right" reverseOrder={false} /> */}
+
       {/* Left Side - Features */}
       <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-600 to-teal-600 p-12 flex-col justify-between text-white relative overflow-hidden">
-        {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-20 left-20 w-32 h-32 border-2 border-white rounded-full"></div>
           <div className="absolute bottom-32 right-16 w-24 h-24 border-2 border-white rounded-full"></div>
           <div className="absolute top-1/2 left-1/3 w-16 h-16 border border-white rounded-full"></div>
         </div>
-        
+
         <div className="relative z-10">
           <div className="flex items-center mb-8">
             <Leaf className="w-10 h-10 text-green-400 mr-3" />
             <h1 className="text-3xl font-bold">BlueCarbon Registry</h1>
           </div>
-          
           <div className="space-y-8">
-            <div>
-              <h2 className="text-4xl font-bold mb-4 leading-tight">
-                Decentralized Carbon Credit Platform for India's Blue Carbon Projects
-              </h2>
-              <p className="text-xl text-blue-100">
-                Blockchain-powered transparency meets AI-driven verification for marine ecosystem restoration.
-              </p>
-            </div>
-            
+            <h2 className="text-4xl font-bold mb-4 leading-tight">
+              Decentralized Carbon Credit Platform for India's Blue Carbon Projects
+            </h2>
             <div className="grid grid-cols-2 gap-6">
               {features.map((feature, index) => (
                 <div key={index} className="flex items-start space-x-3">
@@ -76,7 +108,7 @@ const AuthPage = () => {
             </div>
           </div>
         </div>
-        
+
         <div className="relative z-10 text-center">
           <p className="text-blue-200">
             Join the future of carbon credit trading with verified, transparent, and immutable records.
@@ -98,9 +130,7 @@ const AuthPage = () => {
             <button
               onClick={() => setIsLogin(true)}
               className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
-                isLogin 
-                  ? 'bg-white text-blue-600 shadow-sm' 
-                  : 'text-gray-500 hover:text-gray-700'
+                isLogin ? "bg-white text-blue-600 shadow-sm" : "text-gray-500 hover:text-gray-700"
               }`}
             >
               Sign In
@@ -108,9 +138,7 @@ const AuthPage = () => {
             <button
               onClick={() => setIsLogin(false)}
               className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
-                !isLogin 
-                  ? 'bg-white text-blue-600 shadow-sm' 
-                  : 'text-gray-500 hover:text-gray-700'
+                !isLogin ? "bg-white text-blue-600 shadow-sm" : "text-gray-500 hover:text-gray-700"
               }`}
             >
               Sign Up
@@ -118,18 +146,7 @@ const AuthPage = () => {
           </div>
 
           {/* Form */}
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                {isLogin ? 'Welcome Back' : 'Create Account'}
-              </h2>
-              <p className="text-gray-600">
-                {isLogin 
-                  ? 'Sign in to access your carbon registry dashboard' 
-                  : 'Join the decentralized carbon credit ecosystem'}
-              </p>
-            </div>
-
+          <form onSubmit={handleSubmit} className="space-y-6">
             {!isLogin && (
               <>
                 <div>
@@ -140,12 +157,12 @@ const AuthPage = () => {
                     name="organizationType"
                     value={formData.organizationType}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                   >
                     <option value="company">Company</option>
                     <option value="ngo">NGO</option>
-                    <option value="community">Community Organization</option>
-                    <option value="government">Government Entity</option>
+                    <option value="community">Community</option>
+                    <option value="government">Government</option>
                     <option value="individual">Individual</option>
                   </select>
                 </div>
@@ -160,10 +177,11 @@ const AuthPage = () => {
                     value={formData.organizationName}
                     onChange={handleInputChange}
                     placeholder="Your organization name"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                   />
                 </div>
-                <div>
+
+		<div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Ethereum Wallet Address
                   </label>
@@ -175,7 +193,8 @@ const AuthPage = () => {
                     placeholder="0x...(Your wallet address)"
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
-                </div>
+                </div>		
+
               </>
             )}
 
@@ -189,7 +208,7 @@ const AuthPage = () => {
                 value={formData.email}
                 onChange={handleInputChange}
                 placeholder="your.email@example.com"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg"
               />
             </div>
 
@@ -204,12 +223,12 @@ const AuthPage = () => {
                   value={formData.password}
                   onChange={handleInputChange}
                   placeholder="Enter your password"
-                  className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -227,7 +246,7 @@ const AuthPage = () => {
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
                   placeholder="Confirm your password"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                 />
               </div>
             )}
@@ -242,25 +261,36 @@ const AuthPage = () => {
                   className="mt-1 mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                 />
                 <label className="text-sm text-gray-600">
-                  I agree to the <a href="#" className="text-blue-600 hover:underline">Terms of Service</a> and <a href="#" className="text-blue-600 hover:underline">Privacy Policy</a>, and understand the blockchain-based nature of carbon credit transactions.
+                  I agree to the{" "}
+                  <a href="#" className="text-blue-600 hover:underline">
+                    Terms of Service
+                  </a>{" "}
+                  and{" "}
+                  <a href="#" className="text-blue-600 hover:underline">
+                    Privacy Policy
+                  </a>
+                  , and understand the blockchain-based nature of carbon credit transactions.
                 </label>
               </div>
             )}
 
             <button
-              onClick={handleSubmit}
+              type="submit"
+              disabled={loading}
               className="w-full bg-gradient-to-r from-blue-600 to-teal-600 text-white py-3 px-4 rounded-lg font-medium hover:from-blue-700 hover:to-teal-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 transform hover:scale-105"
             >
-              {isLogin ? 'Sign In to Registry' : 'Create Registry Account'}
+              {loading
+                ? "Please wait..."
+                : isLogin
+                ? "Sign In to Registry"
+                : "Create Registry Account"}
             </button>
 
-
-           
-
             <div className="text-center text-sm text-gray-600">
-              By signing {isLogin ? 'in' : 'up'}, you acknowledge that carbon credits are blockchain-based digital assets and transactions are immutable.
+              By signing {isLogin ? "in" : "up"}, you acknowledge that carbon credits are
+              blockchain-based digital assets and transactions are immutable.
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>
