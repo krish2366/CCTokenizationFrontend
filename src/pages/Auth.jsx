@@ -11,6 +11,7 @@ const AuthPage = () => {
     confirmPassword: '',
     organizationType: 'company',
     organizationName: '',
+    walletAddress: '',
     agreeToTerms: false
   });
 
@@ -159,6 +160,19 @@ const AuthPage = () => {
                     value={formData.organizationName}
                     onChange={handleInputChange}
                     placeholder="Your organization name"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Ethereum Wallet Address
+                  </label>
+                  <input
+                    type="text"
+                    name="walletAddress"
+                    value={formData.walletAddress}
+                    onChange={handleInputChange}
+                    placeholder="0x...(Your wallet address)"
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>

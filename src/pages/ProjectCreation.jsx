@@ -40,7 +40,7 @@ const ProjectCreationPage = () => {
     developerName: "",
     benefits: [],
     sdgGoals: [],
-    droneImages: [],
+    projectImages: [],
     supportingDocs: [],
   });
 
@@ -63,7 +63,7 @@ const ProjectCreationPage = () => {
       "Community Employment",
     ],
     sdgGoals: ["Climate Action", "Life Below Water", "Life on Land"],
-    droneImages: ["sundarbans-drone-1.png"],
+    projectImages: ["sundarbans-drone-1.png"],
     supportingDocs: ["audit-report.pdf", "biodiversity-study.pdf"],
   };
 
@@ -156,7 +156,7 @@ const ProjectCreationPage = () => {
       developerName: "",
       benefits: [],
       sdgGoals: [],
-      droneImages: [],
+      projectImages: [],
       supportingDocs: [],
     });
     setIsTestMode(false);
@@ -615,7 +615,7 @@ const ProjectCreationPage = () => {
                     multiple
                     accept="image/*"
                     onChange={(e) =>
-                      handleFileUpload("droneImages", e.target.files)
+                      handleFileUpload("projectImages", e.target.files)
                     }
                     className="hidden"
                     id="drone-images"
@@ -628,16 +628,16 @@ const ProjectCreationPage = () => {
                   </label>
                 </div>
 
-                {formData.droneImages.length > 0 && (
+                {formData.projectImages.length > 0 && (
                   <div className="mt-3 space-y-2">
-                    {formData.droneImages.map((file, index) => (
+                    {formData.projectImages.map((file, index) => (
                       <div
                         key={index}
                         className="flex items-center justify-between bg-gray-50 p-3 rounded-lg"
                       >
                         <span className="text-sm text-gray-700">{file}</span>
                         <button
-                          onClick={() => removeFile("droneImages", file)}
+                          onClick={() => removeFile("projectImages", file)}
                           className="text-red-500 hover:text-red-700"
                         >
                           <X className="w-4 h-4" />
@@ -807,7 +807,7 @@ const ProjectCreationPage = () => {
                   <div className="space-y-2 text-sm">
                     <div>
                       <strong>Drone Images:</strong>{" "}
-                      {formData.droneImages.length} files
+                      {formData.projectImages.length} files
                     </div>
                     <div>
                       <strong>Supporting Docs:</strong>{" "}
