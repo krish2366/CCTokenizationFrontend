@@ -31,6 +31,8 @@ import {
   Users,
   DollarSign,
 } from "lucide-react";
+import api from "../api/axios";
+import toast from "react-hot-toast";
 
 const AuditorDashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -41,144 +43,160 @@ const AuditorDashboard = () => {
   const [selectedProjects, setSelectedProjects] = useState([]);
   const [currentView, setCurrentView] = useState("table"); // table or grid
 
-  // Mock pending projects data
-  const pendingProjects = [
-    {
-      id: 1,
-      name: "Sundarbans Mangrove Restoration",
-      type: "Mangrove Restoration",
-      location: "West Bengal, India",
-      developer: "Sundarbans Conservation Trust",
-      submissionDate: "2024-09-15",
-      daysWaiting: 3,
-      projectArea: 2500,
-      creditsRequested: 12450,
-      pricePerCredit: 45,
-      status: "AI Analysis Complete",
-      priority: "High",
-      aiConfidence: 94,
-      estimatedCredits: 11890,
-      discrepancy: -560,
-      completeness: 95,
-      supportingDocs: 6,
-      droneImages: 8,
-      riskLevel: "Low",
-      complexity: "Medium",
-    },
-    {
-      id: 2,
-      name: "Kerala Backwaters Blue Carbon",
-      type: "Mangrove Restoration",
-      location: "Kerala, India",
-      developer: "Kerala Marine Foundation",
-      submissionDate: "2024-09-12",
-      daysWaiting: 6,
-      projectArea: 3200,
-      creditsRequested: 15200,
-      pricePerCredit: 48,
-      status: "Document Review",
-      priority: "Medium",
-      aiConfidence: null,
-      estimatedCredits: null,
-      discrepancy: null,
-      completeness: 78,
-      supportingDocs: 4,
-      droneImages: 12,
-      riskLevel: "Medium",
-      complexity: "High",
-    },
-    {
-      id: 3,
-      name: "Chilika Lake Seagrass Conservation",
-      type: "Seagrass Protection",
-      location: "Odisha, India",
-      developer: "Marine Conservation Society",
-      submissionDate: "2024-09-10",
-      daysWaiting: 8,
-      projectArea: 1800,
-      creditsRequested: 8920,
-      pricePerCredit: 52,
-      status: "Ready for Review",
-      priority: "High",
-      aiConfidence: 89,
-      estimatedCredits: 8650,
-      discrepancy: -270,
-      completeness: 92,
-      supportingDocs: 8,
-      droneImages: 15,
-      riskLevel: "Low",
-      complexity: "Medium",
-    },
-    {
-      id: 4,
-      name: "Pulicat Lake Salt Marsh Recovery",
-      type: "Salt Marsh",
-      location: "Tamil Nadu, India",
-      developer: "Coastal Restoration Initiative",
-      submissionDate: "2024-09-08",
-      daysWaiting: 10,
-      projectArea: 1200,
-      creditsRequested: 5630,
-      pricePerCredit: 38,
-      status: "Initial Submission",
-      priority: "Low",
-      aiConfidence: null,
-      estimatedCredits: null,
-      discrepancy: null,
-      completeness: 65,
-      supportingDocs: 3,
-      droneImages: 6,
-      riskLevel: "Medium",
-      complexity: "Low",
-    },
-    {
-      id: 5,
-      name: "Goa Coastal Wetland Protection",
-      type: "Wetland Conservation",
-      location: "Goa, India",
-      developer: "Goa Environmental Trust",
-      submissionDate: "2024-09-14",
-      daysWaiting: 4,
-      projectArea: 1600,
-      creditsRequested: 7850,
-      pricePerCredit: 42,
-      status: "AI Analysis Complete",
-      priority: "Medium",
-      aiConfidence: 91,
-      estimatedCredits: 7200,
-      discrepancy: -650,
-      completeness: 88,
-      supportingDocs: 5,
-      droneImages: 9,
-      riskLevel: "Low",
-      complexity: "Medium",
-    },
-    {
-      id: 6,
-      name: "Andaman Coral Reef Conservation",
-      type: "Marine Conservation",
-      location: "Andaman & Nicobar, India",
-      developer: "Island Conservation Alliance",
-      submissionDate: "2024-09-07",
-      daysWaiting: 11,
-      projectArea: 900,
-      creditsRequested: 6740,
-      pricePerCredit: 65,
-      status: "Compliance Review",
-      priority: "High",
-      aiConfidence: 96,
-      estimatedCredits: 6740,
-      discrepancy: 0,
-      completeness: 100,
-      supportingDocs: 12,
-      droneImages: 20,
-      riskLevel: "Low",
-      complexity: "High",
-    },
-  ];
+  const [pendingProjects, setProjects] = useState([]);
 
-  const filteredProjects = pendingProjects
-    .filter((project) => {
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const res = await api.get("/project/projectsToVerify");
+        setProjects(res.data);
+        toast.success("Projects loaded successfully");
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+        toast.error("Failed to load projects ");
+      }
+    };
+
+    fetchProjects();
+  }, []);
+
+  // Mock pending projects data
+  // const pendingProjects = [
+  //   {
+  //     id: 1,
+  //     name: "Sundarbans Mangrove Restoration",
+  //     type: "Mangrove Restoration",
+  //     location: "West Bengal, India",
+  //     developer: "Sundarbans Conservation Trust",
+  //     submissionDate: "2024-09-15",
+  //     daysWaiting: 3,
+  //     projectArea: 2500,
+  //     creditsRequested: 12450,
+  //     pricePerCredit: 45,
+  //     status: "AI Analysis Complete",
+  //     priority: "High",
+  //     aiConfidence: 94,
+  //     estimatedCredits: 11890,
+  //     discrepancy: -560,
+  //     completeness: 95,
+  //     supportingDocs: 6,
+  //     droneImages: 8,
+  //     riskLevel: "Low",
+  //     complexity: "Medium",
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Kerala Backwaters Blue Carbon",
+  //     type: "Mangrove Restoration",
+  //     location: "Kerala, India",
+  //     developer: "Kerala Marine Foundation",
+  //     submissionDate: "2024-09-12",
+  //     daysWaiting: 6,
+  //     projectArea: 3200,
+  //     creditsRequested: 15200,
+  //     pricePerCredit: 48,
+  //     status: "Document Review",
+  //     priority: "Medium",
+  //     aiConfidence: null,
+  //     estimatedCredits: null,
+  //     discrepancy: null,
+  //     completeness: 78,
+  //     supportingDocs: 4,
+  //     droneImages: 12,
+  //     riskLevel: "Medium",
+  //     complexity: "High",
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "Chilika Lake Seagrass Conservation",
+  //     type: "Seagrass Protection",
+  //     location: "Odisha, India",
+  //     developer: "Marine Conservation Society",
+  //     submissionDate: "2024-09-10",
+  //     daysWaiting: 8,
+  //     projectArea: 1800,
+  //     creditsRequested: 8920,
+  //     pricePerCredit: 52,
+  //     status: "Ready for Review",
+  //     priority: "High",
+  //     aiConfidence: 89,
+  //     estimatedCredits: 8650,
+  //     discrepancy: -270,
+  //     completeness: 92,
+  //     supportingDocs: 8,
+  //     droneImages: 15,
+  //     riskLevel: "Low",
+  //     complexity: "Medium",
+  //   },
+  //   {
+  //     id: 4,
+  //     name: "Pulicat Lake Salt Marsh Recovery",
+  //     type: "Salt Marsh",
+  //     location: "Tamil Nadu, India",
+  //     developer: "Coastal Restoration Initiative",
+  //     submissionDate: "2024-09-08",
+  //     daysWaiting: 10,
+  //     projectArea: 1200,
+  //     creditsRequested: 5630,
+  //     pricePerCredit: 38,
+  //     status: "Initial Submission",
+  //     priority: "Low",
+  //     aiConfidence: null,
+  //     estimatedCredits: null,
+  //     discrepancy: null,
+  //     completeness: 65,
+  //     supportingDocs: 3,
+  //     droneImages: 6,
+  //     riskLevel: "Medium",
+  //     complexity: "Low",
+  //   },
+  //   {
+  //     id: 5,
+  //     name: "Goa Coastal Wetland Protection",
+  //     type: "Wetland Conservation",
+  //     location: "Goa, India",
+  //     developer: "Goa Environmental Trust",
+  //     submissionDate: "2024-09-14",
+  //     daysWaiting: 4,
+  //     projectArea: 1600,
+  //     creditsRequested: 7850,
+  //     pricePerCredit: 42,
+  //     status: "AI Analysis Complete",
+  //     priority: "Medium",
+  //     aiConfidence: 91,
+  //     estimatedCredits: 7200,
+  //     discrepancy: -650,
+  //     completeness: 88,
+  //     supportingDocs: 5,
+  //     droneImages: 9,
+  //     riskLevel: "Low",
+  //     complexity: "Medium",
+  //   },
+  //   {
+  //     id: 6,
+  //     name: "Andaman Coral Reef Conservation",
+  //     type: "Marine Conservation",
+  //     location: "Andaman & Nicobar, India",
+  //     developer: "Island Conservation Alliance",
+  //     submissionDate: "2024-09-07",
+  //     daysWaiting: 11,
+  //     projectArea: 900,
+  //     creditsRequested: 6740,
+  //     pricePerCredit: 65,
+  //     status: "Compliance Review",
+  //     priority: "High",
+  //     aiConfidence: 96,
+  //     estimatedCredits: 6740,
+  //     discrepancy: 0,
+  //     completeness: 100,
+  //     supportingDocs: 12,
+  //     droneImages: 20,
+  //     riskLevel: "Low",
+  //     complexity: "High",
+  //   },
+  // ];
+
+  const filteredProjects = pendingProjects?.filter((project) => {
       const matchesSearch =
         project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         project.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -289,18 +307,18 @@ const AuditorDashboard = () => {
     }
   };
 
-  const totalCreditsRequested = filteredProjects.reduce(
+  const totalCreditsRequested = filteredProjects?.reduce(
     (sum, project) => sum + project.creditsRequested,
     0
   );
   const avgProcessingTime = Math.round(
-    filteredProjects.reduce((sum, project) => sum + project.daysWaiting, 0) /
+    filteredProjects?.reduce((sum, project) => sum + project.daysWaiting, 0) /
       filteredProjects.length
   );
-  const highPriorityCount = filteredProjects.filter(
+  const highPriorityCount = filteredProjects?.filter(
     (p) => p.priority === "High"
   ).length;
-  const aiAnalysisComplete = filteredProjects.filter(
+  const aiAnalysisComplete = filteredProjects?.filter(
     (p) => p.aiConfidence !== null
   ).length;
 
