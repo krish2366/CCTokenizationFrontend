@@ -5,8 +5,8 @@ import LandingPage from './pages/LandingPage.jsx'
 import CarbonMarketplace from './pages/MarketPlace.jsx'
 import ProjectCreationPage from './pages/ProjectCreation.jsx'
 import AuditorVerificationPage from './pages/AuditorVerificationPage.jsx'
-import AuditorDashboard from './pages/AllProjects.jsx'
-import AllProjects from './pages/AllProjects.jsx'
+import AuditorDashboard from './pages/AuditorDashboard.jsx'
+import AllProjects from './pages/AuditorDashboard.jsx'
 
 function App() {
 
